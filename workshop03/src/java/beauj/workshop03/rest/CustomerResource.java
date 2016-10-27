@@ -2,6 +2,7 @@ package beauj.workshop03.rest;
 
 import beauj.workshop03.business.CustomerBean;
 import beauj.workshop03.model.Customer;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +37,11 @@ public class CustomerResource {
 
 		Optional<Customer> opt = customerBean.findById(customerId);
 
-		if (opt.isPresent())
+		if (!opt.isPresent())
 			return (Response.status(Response.Status.NOT_FOUND)
-					.entity(String.format("Customer %d not found", customerId))
+					.entity(Json.createObjectBuilder()
+							.add("error", String.format("Customer %d not found", customerId))
+							.build())
 					.build());
 		return (Response.ok(opt.get().toJSON()).build());
 	}
@@ -53,6 +56,7 @@ public class CustomerResource {
 		customer.setAddressline1(formData.getFirst("addr1"));
 		customer.setAddressline2(formData.getFirst("addr2"));
 		customer.setCity(formData.getFirst("city"));
+		customer.setZip(formData.getFirst("zip"));
 		customer.setState(formData.getFirst("state"));
 		customer.setPhone(formData.getFirst("phone"));
 		customer.setFax(formData.getFirst("fax"));
@@ -73,6 +77,7 @@ public class CustomerResource {
 		return (Response.status(Response.Status.CREATED).build());
 	}
 
+	//Optional
 	@GET
 	public Response get(@Context UriInfo ui) {
 

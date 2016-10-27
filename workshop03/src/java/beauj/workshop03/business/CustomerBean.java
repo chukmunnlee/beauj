@@ -4,7 +4,6 @@ import beauj.workshop03.model.Customer;
 import java.util.List;
 import java.util.Optional;
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;

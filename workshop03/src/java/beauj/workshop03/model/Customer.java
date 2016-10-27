@@ -1,5 +1,6 @@
 package beauj.workshop03.model;
 
+import java.util.Objects;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.Column;
@@ -120,18 +121,18 @@ public class Customer {
 
 	public JsonObject toJSON() {
 		return (Json.createObjectBuilder()
-				.add("customerId", customerId)
+				.add("custId", customerId)
 				.add("name", name)
-				.add("addressline1", addressline1)
-				.add("addressline2", addressline2)
+				.add("addr1", addressline1)
+				.add("addr2", Objects.toString(addressline2, ""))
 				.add("city", city)
 				.add("state", state)
 				.add("zip", zip)
-				.add("phone", phone)
-				.add("fax", fax)
-				.add("email", email)
-				.add("discountCode", discountCode)
-				.add("creditLimit", creditLimt)
+				.add("phone", Objects.toString(phone, ""))
+				.add("fax", Objects.toString(fax, ""))
+				.add("email", Objects.toString(email, ""))
+				.add("discount", discountCode)
+				.add("credit", creditLimt)
 				.build());
 	}
 }
