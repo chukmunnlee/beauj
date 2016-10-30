@@ -2,7 +2,6 @@ package beauj.workshop03.rest;
 
 import beauj.workshop03.business.CustomerBean;
 import beauj.workshop03.model.Customer;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
