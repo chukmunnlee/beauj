@@ -12,7 +12,7 @@
 			controller: "StartCtrl as startCtrl"
 
 		}).state("game", {
-			url: "/game/:gid",
+			url: "/game/:gid/:pieceColor",
 			templateUrl: "views/game.html",
 			controller: "GameCtrl as gameCtrl"
 		});
@@ -26,6 +26,7 @@
 		startCtrl.name = "";
 
 		startCtrl.joinGame = function() {
+			$state.go("game", {gid: startCtrl.gameId, pieceColor: "black"});
 		};
 
 		startCtrl.createGame = function() {
@@ -33,14 +34,42 @@
 				name: startCtrl.name,
 				gameId: startCtrl.gameId
 			}).then(function(gameInfo) {
-				$state.go("game", {gid: gameInfo.gameId});
+				$state.go("game", {gid: gameInfo.gameId, pieceColor: "white"});
 			});
 		}
 	};
 
-	var GameCtrl = function($stateParams) {
+	var GameCtrl = function($stateParams, ChessSvc) {
 		var gameCtrl = this;
 		gameCtrl.gameId = $stateParams.gid;
+		gameCtrl.pieceColor = $stateParams.pieceColor;
+		var pieceColor = $stateParams.pieceColor === "white"? "wP": "bP"
+
+		var onDrop = function(src, dst, piece) {
+			conn.move(src, dst, piece, gameCtrl.gameId);
+		}
+
+		var chessboard = ChessBoard("chessboard", {
+			draggable: true,
+			position: 'start',
+			orientation: $stateParams.pieceColor,
+			pieceTheme: "bower_components/chessboardjs/img/chesspieces/wikipedia/{piece}.png",
+			onDrop: onDrop
+		});
+
+		var conn = ChessSvc.joinGame(gameCtrl.gameId);
+		conn.onopen = function() {
+			console.info("Connected");
+		}
+		conn.onmessage = function(data) {
+			if (data.gameId !== gameCtrl.gameId)
+				return;
+
+			if (pieceColor === data.pieceColor)
+				return;
+
+			chessboard.move(data.move);
+		}
 	};
 
 	var ChessCtrl = function() {
@@ -68,33 +97,40 @@
 		this.joinGame = function(gameId) {
 			var conn = { };
 			conn.socket = new WebSocket(url + "/" + gameId);
+			conn.move = function(src, dst, pieceColor, gid) {
+				conn.socket.send(JSON.stringify({
+					gameId: gid,
+					move: src + "-" + dst, 
+					pieceColor: pieceColor
+				}));
+			}
 			conn.socket.onopen = function() {
-				if (this.onopen)
+				if (conn.onopen)
 					$rootScope.$apply(function() {
 						conn.onopen();
 					});
 			}
 			conn.socket.onclose = function(evt) {
-				if (this.onclose)
+				if (conn.onclose)
 					$rootScope.$apply(function() {
 						conn.onclose(evt);
 					})
 			}
 			conn.socket.onmessage = function(evt) {
-				if (this.onmessage)
+				if (conn.onmessage)
 					$rootScope.$apply(function() {
 						conn.onmessage(JSON.parse(evt.data));
 					})
 			}
 			conn.socket.onerror = function() {
-				if (this.onerror)
+				if (conn.onerror)
 					$rootScope.$apply(function() {
 						conn.onerror();
 					})
 			}
 			conn.close = function() {
-				this.close = function() {
-					this.socket.close();
+				conn.close = function() {
+					conn.socket.close();
 				}
 			}
 			return (conn);
@@ -108,6 +144,6 @@
 
 	ChessApp.controller("ChessCtrl", [ChessCtrl]);
 	ChessApp.controller("StartCtrl", ["$state", "ChessSvc", StartCtrl]);
-	ChessApp.controller("GameCtrl", ["$stateParams", GameCtrl]);
+	ChessApp.controller("GameCtrl", ["$stateParams", "ChessSvc", GameCtrl]);
 
 })();
