@@ -10,9 +10,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-@WebServlet("/shop")
-public class ShopServlet extends HttpServlet {
+@WebServlet("/checkout")
+public class CheckoutServlet extends HttpServlet {
 
 	@Inject private Cart cart;
 
@@ -20,29 +21,24 @@ public class ShopServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 
-		String itemName = req.getParameter("name");
-		Integer quantity = Integer.parseInt(req.getParameter("quantity"));
+		HttpSession session = req.getSession();
+		session.invalidate();
 
-		Item item = new Item();
-		item.setName(itemName);
-		item.setQuantity(quantity);
-
-		cart.addItem(item);
-
-		resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+		resp.setStatus(HttpServletResponse.SC_OK);
 		resp.setContentType("text/html");
 
 		try (PrintWriter pw = resp.getWriter()) {
-			pw.print("<h1>My Cart</h1>");
+			pw.println("<h2>Checkout</h2>");
+			pw.println("<p>The contents of your cart:</p>");
 			pw.print("<ul>");
 			for (Item i: cart.getItems())
 				pw.print(String.format("<li>%s (%d)</li>", i.getName(), i.getQuantity()));
 			pw.print("</ul>");
-			pw.println("<a href='index.html'>Back</a>");
-			pw.println("<form method='post' action='checkout'>");
-			pw.println("<button type='submit'>Checkout</button>");
-			pw.println("</form>");
+			pw.println("<p>Thank you for shopping with us</p>");
 			pw.flush();
 		}
 	}
+
+	
+	
 }
