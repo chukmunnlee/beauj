@@ -24,7 +24,7 @@
 
 	<div class="form-group">
 		<button type="button" class="btn btn-lg btn-warning btn-block"
-				ng-disabled="startForm.name.$invalid" ng-click="startCtrl.createGame()">
+				ng-disabled="startForm.name.$invalid || startForm.gameId.$valid" ng-click="startCtrl.createGame()">
 			Create a new game
 		</button>
 	</div>

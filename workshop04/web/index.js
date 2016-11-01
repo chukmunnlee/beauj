@@ -4,6 +4,19 @@
 
 	var ChessApp = angular.module("ChessApp", ["ui.router"]);
 
+	var ChessGame = function(gameId, pieceColor) {
+		this.gameId = gameId;
+		this.pieceColor = pieceColor;
+	}
+	ChessGame.prototype.move = function(src, dst, piece) {
+		return ({
+			gameId: this.gameId,
+			pieceColor: piece || this.pieceColor,
+			action: "move",
+			payload: src + "-" + dst
+		});
+	}
+
 	var ChessConfig = function($stateProvider, $urlRouterProvider) {
 
 		$stateProvider.state("start", {
@@ -12,7 +25,7 @@
 			controller: "StartCtrl as startCtrl"
 
 		}).state("game", {
-			url: "/game/:gid/:pieceColor",
+			url: "/game/:name/:gid/:pieceColor",
 			templateUrl: "views/game.html",
 			controller: "GameCtrl as gameCtrl"
 		});
@@ -26,15 +39,22 @@
 		startCtrl.name = "";
 
 		startCtrl.joinGame = function() {
-			$state.go("game", {gid: startCtrl.gameId, pieceColor: "black"});
+			$state.go("game", {
+				name: startCtrl.name,
+				gid: startCtrl.gameId, 
+				pieceColor: "black"
+			});
 		};
-
 		startCtrl.createGame = function() {
 			ChessSvc.createGame({
 				name: startCtrl.name,
 				gameId: startCtrl.gameId
 			}).then(function(gameInfo) {
-				$state.go("game", {gid: gameInfo.gameId, pieceColor: "white"});
+				$state.go("game", {
+					name: startCtrl.name,
+					gid: gameInfo.gameId, 
+					pieceColor: "white"
+				});
 			});
 		}
 	};
@@ -43,10 +63,13 @@
 		var gameCtrl = this;
 		gameCtrl.gameId = $stateParams.gid;
 		gameCtrl.pieceColor = $stateParams.pieceColor;
-		var pieceColor = $stateParams.pieceColor === "white"? "wP": "bP"
+		gameCtrl.name = $stateParams.name;
+
+		var pieceColor = $stateParams.pieceColor === "white"? "wP": "bP";
+		var chessGame = new ChessGame($stateParams.gid, pieceColor);
 
 		var onDrop = function(src, dst, piece) {
-			conn.move(src, dst, piece, gameCtrl.gameId);
+			conn.send(chessGame.move(src, dst, piece));
 		}
 
 		var chessboard = ChessBoard("chessboard", {
@@ -68,7 +91,13 @@
 			if (pieceColor === data.pieceColor)
 				return;
 
-			chessboard.move(data.move);
+			switch (data.action) {
+				case "move":
+					chessboard.move(data.payload);
+					break;
+
+				default:
+			}
 		}
 	};
 
@@ -97,12 +126,8 @@
 		this.joinGame = function(gameId) {
 			var conn = { };
 			conn.socket = new WebSocket(url + "/" + gameId);
-			conn.move = function(src, dst, pieceColor, gid) {
-				conn.socket.send(JSON.stringify({
-					gameId: gid,
-					move: src + "-" + dst, 
-					pieceColor: pieceColor
-				}));
+			conn.send = function(pkt) {
+				conn.socket.send(JSON.stringify(pkt));
 			}
 			conn.socket.onopen = function() {
 				if (conn.onopen)
