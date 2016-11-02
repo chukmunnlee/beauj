@@ -2,13 +2,10 @@ package beauj.workshop03.rest;
 
 import beauj.workshop03.business.CustomerBean;
 import beauj.workshop03.model.Customer;
-import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
 import javax.persistence.EntityExistsException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,12 +13,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 @RequestScoped
 @Path("/customer")
@@ -66,7 +60,7 @@ public class CustomerResource {
 		try {
 			customerBean.add(customer);
 		} catch (EntityExistsException ex) {
-			return (Response.status(Response.Status.BAD_GATEWAY)
+			return (Response.status(Response.Status.BAD_REQUEST)
 					.entity(ex.getMessage()).build());
 		} catch (Throwable t) {
 			return (Response.status(Response.Status.INTERNAL_SERVER_ERROR)
