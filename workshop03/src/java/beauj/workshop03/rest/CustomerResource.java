@@ -75,27 +75,4 @@ public class CustomerResource {
 
 		return (Response.status(Response.Status.CREATED).build());
 	}
-
-	//Optional
-	@GET
-	public Response get(@Context UriInfo ui) {
-
-		UriBuilder builder = ui.getBaseUriBuilder()
-				.path(CustomerResource.class);
-
-		try {
-			builder = builder.path(CustomerResource.class.getMethod("get", Integer.class));
-		} catch (Exception ex) { }
-
-		JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
-		List<Customer> customers = customerBean.findAll();
-
-		for (Customer c: customers) {
-			URI uri = builder.clone().build(c.getCustomerId());
-			arrBuilder.add(uri.toString());
-		}
-
-		return (Response.ok(arrBuilder.build()).build());
-	}
-	
 }

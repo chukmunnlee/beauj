@@ -22,6 +22,7 @@ public class CustomersResource {
 
 	@EJB private CustomerBean customerBean;
 
+	//Optional 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll(@Context UriInfo ui) {
