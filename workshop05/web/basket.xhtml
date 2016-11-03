@@ -4,7 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>My Basket</title>
     </h:head>
     <h:body>
 		<h1>My Basket</h1>
@@ -24,7 +24,7 @@
 
 			<h:panelGrid columns="2">
 				<h:commandButton value="Back to Shop" action="index"/>
-				<h:commandButton value="Go to Checkout" action="secure/checkout"/>
+				<h:button value="Go to Checkout" outcome="secure/checkout"/>
 			</h:panelGrid>
 
 		</h:form>
