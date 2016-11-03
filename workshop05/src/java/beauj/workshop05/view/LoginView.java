@@ -35,7 +35,6 @@ public class LoginView implements Serializable {
 	public String login() {
 
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ExternalContext ext = ctx.getExternalContext();
 
 		HttpServletRequest req = (HttpServletRequest)ctx.getExternalContext()
 				.getRequest();
@@ -49,6 +48,5 @@ public class LoginView implements Serializable {
 		}
 
 		return ("/secure/checkout");
-
 	}
 }
