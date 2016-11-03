@@ -1,5 +1,6 @@
 package beauj.workshop05.view;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -8,7 +9,9 @@ import javax.inject.Named;
 
 @ApplicationScoped
 @Named
-public class Fruit {
+public class Fruit implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String[] FRUIT_NAMES = { 
 		"acorn_squash", "apple", "bell_pepper", "blueberries", "broccoli",

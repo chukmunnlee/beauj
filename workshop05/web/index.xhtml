@@ -9,7 +9,11 @@
     </h:head>
     <h:body>
 		<h1>Welcome to E-Mart</h1>
+
 		<h:form>
+			<h:commandButton value="View Basket" action="basket" 
+					 rendered="#{basket.getBasket().size() gt 0}"/>
+
 			<h:panelGrid columns="3">
 				<c:forEach var="f" items="#{fruit.fruits()}">
 					<h:panelGroup style="padding:50px;">
@@ -18,6 +22,7 @@
 					</h:panelGroup>
 				</c:forEach>
 			</h:panelGrid>
+
 
 		</h:form>
     </h:body>

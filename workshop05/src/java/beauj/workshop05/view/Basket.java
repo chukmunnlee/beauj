@@ -21,8 +21,7 @@ public class Basket implements Serializable {
 		this.basket = basket;
 	}
 
-	public void addToBasket(Fruit fruit) {
-
+	public String addToBasket(Fruit fruit) {
 		basket.stream()
 				.filter(f -> f.equals(fruit))
 				.findFirst()
@@ -32,6 +31,7 @@ public class Basket implements Serializable {
 					return (f);
 				})
 				.incrementQuantity();
+
+		return ("basket");
 	}
-	
 }
