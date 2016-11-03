@@ -27,8 +27,9 @@ public class Basket implements Serializable {
 				.filter(f -> f.equals(fruit))
 				.findFirst()
 				.orElseGet(() -> {
-					basket.add(fruit);
-					return (fruit);
+					Fruit f = fruit.createCopy();
+					basket.add(f);
+					return (f);
 				})
 				.incrementQuantity();
 	}

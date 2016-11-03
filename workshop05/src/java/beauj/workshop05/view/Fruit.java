@@ -55,6 +55,10 @@ public class Fruit {
 		quantity++;
 	}
 
+	public Fruit createCopy() {
+		return (new Fruit(name));
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		return ((obj instanceof Fruit) && (name.equals(((Fruit)obj).name)));
