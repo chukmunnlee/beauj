@@ -37,6 +37,9 @@ public class CustomerView implements Serializable {
 
 	public void query() {
 
+		if (null == queryId)
+			return;
+
 		customer = em.find(Customer.class, queryId);
 
 		if (null == customer) {

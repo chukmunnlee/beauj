@@ -3,6 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<f:metadata>
+		<f:viewParam name="custId" value="#{customerView.queryId}"/>
+		<f:viewAction action="#{customerView.query()}"/>
+	</f:metadata>
     <h:head>
         <title>Customer Query</title>
     </h:head>
@@ -12,13 +16,20 @@
 
 			<h:panelGrid columns="2">
 				Customer id:
-				<h:inputText value="#{customerView.queryId}" id="queryId"/>
+				<h:panelGroup>
+					<h:inputText value="#{customerView.queryId}" id="queryId"/>
+					<h:panelGroup rendered="#{not empty customerView.customer}">
+						<h:link value="Bookmark #{customerView.customer.name}">
+							<f:param name="custId" value="#{customerView.customer.customerId}"/>
+						</h:link>
+					</h:panelGroup>
+				</h:panelGroup>
 
 				<h:commandButton value="Clear" action="#{customerView.clearQuery()}">
-					<f:ajax execute="@form" render="@form"/>
+					<f:ajax execute="@form" render="@form" disabled="true"/>
 				</h:commandButton>
 				<h:commandButton value="Search" action="#{customerView.query()}">
-					<f:ajax execute="@form" render="@form"/>
+					<f:ajax execute="@form" render="@form" disabled="true"/>
 				</h:commandButton>
 
 				<h:panelGroup/>
