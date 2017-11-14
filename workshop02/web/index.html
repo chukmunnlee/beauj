@@ -6,27 +6,35 @@ and open the template in the editor.
 -->
 <html>
 	<head>
-		<title>Web Cart</title>
+		<title>Customer Enquiry</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-		<h1>Weather</h1>
-		<form method="post" action="weather">
+		<h1>Customer Query</h1>
+		<form method="GET" action="customer">
+
 			<table>
 				<tr>
-					<td>City name:</td>
+					<td>Customer Id:</td>
 					<td>
-						<input type="text" name="cityName" size="50" placeholder="City name">
+						<input type="number" name="custId" placeholder="Customer id">
+					</td>
+				</tr>
+				<tr>
+					<td>Reload?</td>
+					<td>
+						<input type="checkbox" name="reload">
 					</td>
 				</tr>
 				<tr>
 					<td></td>
 					<td>
-						<button type="submit">Get Weather</button>
+						<button type="submit">Find</button>
 					</td>
 				</tr>
 			</table>
+
 		</form>
 	</body>
 </html>

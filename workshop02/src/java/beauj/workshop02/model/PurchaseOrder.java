@@ -1,5 +1,6 @@
 package beauj.workshop02.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,9 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="purchase_order")
-public class PurchaseOrder {
+public class PurchaseOrder implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name="order_num")
