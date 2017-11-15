@@ -1,14 +1,10 @@
 package beauj.workshop05.web;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.servlet.ServletException;
