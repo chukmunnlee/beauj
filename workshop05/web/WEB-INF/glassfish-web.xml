@@ -3,7 +3,7 @@
 <glassfish-web-app error-url="">
   <security-role-mapping>
     <role-name>authenticated</role-name>
-    <group-name>customer</group-name>
+    <group-name>user</group-name>
   </security-role-mapping>
   <class-loader delegate="true"/>
   <jsp-config>
