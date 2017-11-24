@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 public class JWTFilter implements Filter {
 
 	private byte[] SECRET = null;
+	private static final String BEARER = "Bearer ";
+	private static final String AUTHORIZATION_HEADER = "Authorization";
 
 	@Override
 	public void init(FilterConfig filterConfig) 
@@ -35,16 +37,17 @@ public class JWTFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 			throws IOException, ServletException { 
 		HttpServletRequest httpReq = (HttpServletRequest)request;
-		String authHeader = httpReq.getHeader("Authorization");
+		String authHeader = httpReq.getHeader(AUTHORIZATION_HEADER);
 
-		if (Objects.isNull(authHeader)) {
+		if (Objects.isNull(authHeader) || 
+				(!authHeader.trim().startsWith(BEARER))) {
 			HttpServletResponse httpResp = (HttpServletResponse)response;
 			httpResp.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
 
 		//Watch the space in 'Bearer '
-		final String token = authHeader.substring("Bearer ".length());
+		final String token = authHeader.trim().substring(BEARER.length());
 
 		try {
 			Claims claims = Jwts.parser().setSigningKey(SECRET)
